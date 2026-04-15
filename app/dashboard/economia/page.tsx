@@ -7,7 +7,7 @@ const EconomiaDashboard = () => {
     <Suspense>
       <DashboardTemplate
         title="Economía"
-        description="Explorá inidcadores económicos clave por país"
+        description="Explorá indicadores económicos clave por país"
         metrics={ECONOMIC_INDICATORS}
       />
     </Suspense>

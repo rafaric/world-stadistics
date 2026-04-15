@@ -7,6 +7,7 @@ import IndicatorCards from "./IndicatorCards";
 import ChartSection from "./ChartSection";
 import { useSearchParams } from "next/navigation";
 import ScrollToTopButton from "./ScrollToTopButton";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Props {
   title: string;
@@ -49,7 +50,12 @@ const DashboardTemplate = ({
   }, [countryParam, metrics]);
 
   return (
-    <div className="p-6 space-y-6 animate-in fade-in slide-in-from-bottom relative h-fit ">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="p-6 space-y-6 relative h-fit"
+    >
       <div className="flex justify-between items-center">
         <header>
           <h1 className="text-3xl font-bold">{title}</h1>
@@ -57,22 +63,32 @@ const DashboardTemplate = ({
         </header>
         <CountrySelector selected={country} onChange={setCountry} />
       </div>
-      <IndicatorCards
-        country={country}
-        metrics={metrics}
-        selected={selectedIndicator}
-        onSelect={setSelectedIndicator}
-        values={values ?? {}}
-      />
-      <ChartSection
-        selected={selectedIndicator}
-        country={country}
-        metrics={metrics}
-      />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={country}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.25 }}
+        >
+          <IndicatorCards
+            country={country}
+            metrics={metrics}
+            selected={selectedIndicator}
+            onSelect={setSelectedIndicator}
+            values={values ?? {}}
+          />
+          <ChartSection
+            selected={selectedIndicator}
+            country={country}
+            metrics={metrics}
+          />
+        </motion.div>
+      </AnimatePresence>
       <div className="sticky flex justify-end w-full bottom-10 right-0">
         <ScrollToTopButton />
       </div>
-    </div>
+    </motion.div>
   );
 };
 export default DashboardTemplate;
