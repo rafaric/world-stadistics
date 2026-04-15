@@ -34,7 +34,7 @@ const CountrySelector = ({ selected, onChange }: Props) => {
   };
   return (
     <Select value={selected} onValueChange={handleSelect}>
-      <SelectTrigger className="w-[200px]">
+      <SelectTrigger className="w-[200px]" aria-label="Seleccionar país">
         <SelectValue placeholder="Selecciona un país" />
       </SelectTrigger>
       <SelectContent>

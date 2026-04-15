@@ -31,7 +31,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main className="px-4 2xl:py-10 mx-auto flex flex-col items-center h-fit">
+      <section className="px-4 2xl:py-10 mx-auto flex flex-col items-center h-fit">
         <div className="p-6 space-y-6">
           <p className="text-muted-foreground">
             Explorá dashboards temáticos por categorías
@@ -46,7 +46,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </main>
+      </section>
     </>
   );
 }

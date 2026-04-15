@@ -51,10 +51,20 @@ const IndicatorCards = ({
           return (
             <Card
               key={key}
+              role="button"
+              tabIndex={0}
+              aria-pressed={selected === code}
+              aria-label={`Ver gráfico de ${label}`}
               onClick={() => {
                 onSelect(selected === code ? null : code);
               }}
-              className={`flex flex-col justify-between cursor-pointer transition hover:brightness-120 hover:sepia-50 hover:shadow-xl ${
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onSelect(selected === code ? null : code);
+                }
+              }}
+              className={`flex flex-col justify-between cursor-pointer transition hover:brightness-120 hover:sepia-50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                 selected === code ? "border border-blue-500 shadow-md" : ""
               } `}
             >

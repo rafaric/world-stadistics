@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navigator from "./components/Navigator";
+import Footer from "./components/Footer";
 
 const SITE_URL = "https://world-stadistics.vercel.app";
 const SITE_NAME = "World Estadísticas";
@@ -77,9 +78,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className="bg-blue-200 h-fit">
+      <body className="bg-blue-200 min-h-screen flex flex-col">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:text-sm focus:font-medium"
+        >
+          Ir al contenido principal
+        </a>
         <Navigator />
-        {children}
+        <main id="main-content" className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );
