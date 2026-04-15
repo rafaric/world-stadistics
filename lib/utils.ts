@@ -28,8 +28,11 @@ export const formatValue = (value: number | null, unit: string): string => {
   }
 
   // ── Percentages ──
-  if (unit === "%" || unit.includes("%")) {
-    return `${value.toLocaleString("es-AR", { maximumFractionDigits: 1 })} ${unit.replace(/^%/, "").trim()}`.trim();
+  if (unit === "%") {
+    return `${value.toLocaleString("es-AR", { maximumFractionDigits: 1 })}%`;
+  }
+  if (unit.includes("%")) {
+    return `${value.toLocaleString("es-AR", { maximumFractionDigits: 1 })}% ${unit.replace(/%/, "").trim()}`.trim();
   }
 
   // ── Large numbers with unit ──
