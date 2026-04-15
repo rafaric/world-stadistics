@@ -27,17 +27,17 @@ ChartJS.register(
   Legend
 );
 
-const CHART_COLORS = [
-  "#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#8b5cf6", "#ec4899",
-];
+const CHART_COLORS_LIGHT = ["#2563eb", "#dc2626", "#16a34a", "#d97706", "#7c3aed", "#db2777"];
+const CHART_COLORS_DARK = ["#60a5fa", "#f87171", "#4ade80", "#fbbf24", "#a78bfa", "#f472b6"];
 
 function getThemeColors() {
   if (typeof window === "undefined")
-    return { textColor: "#6b7280", borderColor: "#e5e7eb" };
-  const style = getComputedStyle(document.documentElement);
+    return { textColor: "#4b5563", borderColor: "rgba(0,0,0,0.08)", colors: CHART_COLORS_LIGHT };
+  const isDark = document.documentElement.classList.contains("dark");
   return {
-    textColor: style.getPropertyValue("--muted-foreground").trim() || "#6b7280",
-    borderColor: style.getPropertyValue("--border").trim() || "#e5e7eb",
+    textColor: isDark ? "#9ca3af" : "#4b5563",
+    borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)",
+    colors: isDark ? CHART_COLORS_DARK : CHART_COLORS_LIGHT,
   };
 }
 
@@ -80,6 +80,7 @@ export default function ComparisonChart({
   }, [data]);
 
   const chartData = useMemo(() => {
+    const { colors } = getThemeColors();
     const datasets = selectedCountries.map((code, i) => {
       const entries = data.get(code) ?? [];
       const entryMap = new Map(entries.map((e) => [e.date, e.value]));
@@ -87,8 +88,8 @@ export default function ComparisonChart({
       return {
         label: countries.find((c) => c.code === code)?.name ?? code,
         data: allDates.map((date) => entryMap.get(date) ?? null),
-        borderColor: CHART_COLORS[i % CHART_COLORS.length],
-        backgroundColor: CHART_COLORS[i % CHART_COLORS.length],
+        borderColor: colors[i % colors.length],
+        backgroundColor: colors[i % colors.length],
         tension: 0.2,
         fill: false,
         pointRadius: 3,

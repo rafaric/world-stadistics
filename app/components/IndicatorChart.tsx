@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -32,17 +32,6 @@ interface Props {
   range: number;
 }
 
-function getThemeColors() {
-  if (typeof window === "undefined")
-    return { primary: "#3b82f6", textColor: "#6b7280", borderColor: "#e5e7eb" };
-  const style = getComputedStyle(document.documentElement);
-  return {
-    primary: style.getPropertyValue("--primary").trim() || "#3b82f6",
-    textColor: style.getPropertyValue("--muted-foreground").trim() || "#6b7280",
-    borderColor: style.getPropertyValue("--border").trim() || "#e5e7eb",
-  };
-}
-
 const IndicatorChart = ({
   country,
   indicatorCode,
@@ -60,25 +49,32 @@ const IndicatorChart = ({
   }, [country, indicatorCode, range]);
 
   const chartData = useMemo(() => {
-    const { primary } = getThemeColors();
+    const isDark = document.documentElement.classList.contains("dark");
+    const primary = isDark ? "#60a5fa" : "#2563eb";
+    const bgFill = isDark ? "rgba(96,165,250,0.1)" : "rgba(37,99,235,0.1)";
+
     return {
       labels: history.map((d) => d.date),
       datasets: [
         {
           label: labelCode,
           data: history.map((d) => d.value),
-          borderColor: `oklch(${primary})`,
-          backgroundColor: `oklch(${primary} / 0.1)`,
+          borderColor: primary,
+          backgroundColor: bgFill,
           fill: true,
           tension: 0.2,
           pointRadius: 3,
+          pointBackgroundColor: primary,
         },
       ],
     };
   }, [history, labelCode]);
 
   const options = useMemo(() => {
-    const { textColor, borderColor } = getThemeColors();
+    const isDark = document.documentElement.classList.contains("dark");
+    const textColor = isDark ? "#9ca3af" : "#4b5563";
+    const gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)";
+
     return {
       responsive: true,
       plugins: {
@@ -89,11 +85,11 @@ const IndicatorChart = ({
       scales: {
         x: {
           ticks: { color: textColor },
-          grid: { color: borderColor },
+          grid: { color: gridColor },
         },
         y: {
           ticks: { color: textColor },
-          grid: { color: borderColor },
+          grid: { color: gridColor },
           beginAtZero: false,
         },
       },
