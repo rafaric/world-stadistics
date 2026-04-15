@@ -12,36 +12,38 @@ export function getCountryNameByCode(code: string): string | undefined {
 export const formatValue = (value: number | null, unit: string): string => {
   if (value === null) return "Sin datos";
 
-  const formatter = new Intl.NumberFormat("es-AR");
+  const formatter = new Intl.NumberFormat("es-AR", {
+    maximumFractionDigits: 1,
+  });
 
-  // Large USD values → compact
-  if (unit === "USD" && Math.abs(value) >= 1_000_000_000) {
-    const billones = value / 1_000_000_000;
-    return `$${billones.toLocaleString("es-AR", { maximumFractionDigits: 1 })} mil M ${unit}`;
+  // ── USD / currency ──
+  if (unit === "USD") {
+    if (Math.abs(value) >= 1_000_000_000) {
+      return `$${(value / 1_000_000_000).toLocaleString("es-AR", { maximumFractionDigits: 1 })} mil M`;
+    }
+    if (Math.abs(value) >= 1_000_000) {
+      return `$${(value / 1_000_000).toLocaleString("es-AR", { maximumFractionDigits: 0 })} M`;
+    }
+    return `$${formatter.format(value)}`;
   }
 
-  if (unit === "USD" && Math.abs(value) >= 1_000_000) {
-    const millones = value / 1_000_000;
-    return `$${millones.toLocaleString("es-AR", { maximumFractionDigits: 0 })} M ${unit}`;
-  }
-
-  // Percentages → 1 decimal
+  // ── Percentages ──
   if (unit === "%" || unit.includes("%")) {
-    return `${value.toLocaleString("es-AR", { maximumFractionDigits: 1 })}${unit.startsWith("%") ? "" : ` ${unit}`}`;
+    return `${value.toLocaleString("es-AR", { maximumFractionDigits: 1 })} ${unit.replace(/^%/, "").trim()}`.trim();
   }
 
-  // Large numbers → compact
+  // ── Large numbers with unit ──
   if (Math.abs(value) >= 1_000_000_000) {
-    const billones = value / 1_000_000_000;
-    return `${billones.toLocaleString("es-AR", { maximumFractionDigits: 2 })} mil M`;
+    const compact = (value / 1_000_000_000).toLocaleString("es-AR", { maximumFractionDigits: 2 });
+    return `${compact} mil M ${unit}`.trim();
   }
 
   if (Math.abs(value) >= 1_000_000) {
-    const millones = value / 1_000_000;
-    return `${millones.toLocaleString("es-AR", { maximumFractionDigits: 1 })} M`;
+    const compact = (value / 1_000_000).toLocaleString("es-AR", { maximumFractionDigits: 1 });
+    return `${compact} M ${unit}`.trim();
   }
 
-  // Default → formatted with unit
+  // ── Default ──
   return `${formatter.format(value)} ${unit}`.trim();
 };
 
