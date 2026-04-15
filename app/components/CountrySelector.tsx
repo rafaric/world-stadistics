@@ -39,7 +39,7 @@ const CountrySelector = ({ selected, onChange }: Props) => {
       </SelectTrigger>
       <SelectContent>
         {countries.map(({ code, name }) => (
-          <SelectItem key={code} value={code} className="text-black">
+          <SelectItem key={code} value={code}>
             {name}
           </SelectItem>
         ))}

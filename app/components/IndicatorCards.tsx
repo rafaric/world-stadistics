@@ -37,11 +37,11 @@ const IndicatorCards = ({
       : "";
 
   return (
-    <div className={`p-6 space-y-6rounded-2xl relative`}>
+    <div className={`p-6 space-y-6 rounded-2xl relative`}>
       <div
-        className={`absolute ${flag} w-full h-full opacity-40 -z-10 rounded-2xl bg-cover`}
+        className={`absolute ${flag} w-full h-full opacity-20 dark:opacity-10 -z-10 rounded-2xl bg-cover`}
       />
-      <h2 className="text-2xl font-bold py-2 text-center text-gray-800">
+      <h2 className="text-2xl font-bold py-2 text-center text-foreground">
         Indicadores de {countries.find((c) => c.code === country)?.name}
       </h2>
       <div className="grid grid-cols-1 p-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -64,23 +64,23 @@ const IndicatorCards = ({
                   onSelect(selected === code ? null : code);
                 }
               }}
-              className={`flex flex-col justify-between cursor-pointer transition hover:brightness-120 hover:sepia-50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-                selected === code ? "border border-blue-500 shadow-md" : ""
+              className={`flex flex-col justify-between cursor-pointer transition hover:brightness-110 dark:hover:bg-accent hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                selected === code ? "border-2 border-primary shadow-md" : ""
               } `}
             >
               <CardHeader>
-                <CardTitle>{label}</CardTitle>
+                <CardTitle className="text-foreground">{label}</CardTitle>
               </CardHeader>
               <CardContent className="text-2xl font-bold flex flex-col flex-1 justify-between">
                 <div>
                   {value !== null ? (
-                    <p className="text-2xl font-bold">
+                    <p className="text-2xl font-bold text-foreground">
                       {formatValue(value.value, unit)}
                     </p>
                   ) : (
                     <>
                       <Skeleton className="h-9 w-24" />
-                      <span className="text-gray-400 text-[10px] text-end">
+                      <span className="text-muted-foreground text-[10px] text-end">
                         Sin datos disponibles
                       </span>
                     </>
@@ -88,7 +88,7 @@ const IndicatorCards = ({
                 </div>
 
                 <div className="w-full flex justify-end mt-auto">
-                  <span className="text-gray-400 text-[10px] text-end">
+                  <span className="text-muted-foreground text-[10px] text-end">
                     {value?.value === null
                       ? "Sin datos disponibles"
                       : `Último dato disponible: ${value?.year}`}
