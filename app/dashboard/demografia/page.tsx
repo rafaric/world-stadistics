@@ -37,7 +37,7 @@ const categorias = {
 
 const DemogDashboard = () => {
   return (
-    <div className="p-6 space-y-6 h-screen">
+    <div className="p-6 space-y-6">
       <motion.h1
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}

@@ -66,7 +66,7 @@ const DashboardTemplate = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="p-6 space-y-6 relative h-fit"
+      className="p-6 pb-12 space-y-6 relative h-fit"
     >
       <div className="flex justify-between items-center">
         <header>
