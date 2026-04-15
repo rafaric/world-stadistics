@@ -8,7 +8,9 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import IndicatorChart from "./IndicatorChart";
+import ComparisonChart from "./ComparisonChart";
 import { getIndicatorPropertyByCode } from "@/lib/utils";
 
 interface Props {
@@ -19,11 +21,13 @@ interface Props {
 
 export default function ChartSection({ country, selected, metrics }: Props) {
   const [range, setRange] = useState<number>(5);
+  const [compareMode, setCompareMode] = useState(false);
   const chartRef = useRef<HTMLDivElement>(null);
 
   const handleRangeChange = (value: string) => {
     setRange(Number(value));
   };
+
   useEffect(() => {
     if (selected && chartRef.current) {
       const timeout = setTimeout(() => {
@@ -31,9 +35,9 @@ export default function ChartSection({ country, selected, metrics }: Props) {
           behavior: "smooth",
           block: "start",
         });
-      }, 800); // ⏳ Espera 1.5 segundos
+      }, 800);
 
-      return () => clearTimeout(timeout); // Limpieza
+      return () => clearTimeout(timeout);
     }
   }, [selected]);
 
@@ -42,9 +46,9 @@ export default function ChartSection({ country, selected, metrics }: Props) {
       {selected && (
         <div
           className="transition-opacity duration-500 ease-in-out opacity-100 animate-fade-in"
-          key={selected + country + range} // fuerza rerender limpio
+          key={selected + country + range + compareMode}
         >
-          <div className="flex items-center justify-center gap-4 mb-4">
+          <div className="flex items-center justify-center gap-4 mb-4 flex-wrap">
             <Select onValueChange={handleRangeChange} value={String(range)}>
               <SelectTrigger className="w-[120px]">
                 <SelectValue placeholder="Rango" />
@@ -55,20 +59,34 @@ export default function ChartSection({ country, selected, metrics }: Props) {
                 <SelectItem value="15">15 años</SelectItem>
               </SelectContent>
             </Select>
+
+            <Button
+              variant={compareMode ? "default" : "outline"}
+              size="sm"
+              onClick={() => setCompareMode(!compareMode)}
+            >
+              {compareMode ? "Vista individual" : "Comparar países"}
+            </Button>
           </div>
+
           <div ref={chartRef}>
-            <IndicatorChart
-              country={country}
-              indicatorCode={selected}
-              labelCode={getIndicatorPropertyByCode(metrics, selected, "label")}
-              range={range}
-            />
+            {compareMode ? (
+              <ComparisonChart
+                indicatorCode={selected}
+                label={getIndicatorPropertyByCode(metrics, selected, "label") ?? selected}
+                range={range}
+              />
+            ) : (
+              <IndicatorChart
+                country={country}
+                indicatorCode={selected}
+                labelCode={getIndicatorPropertyByCode(metrics, selected, "label")}
+                range={range}
+              />
+            )}
           </div>
         </div>
       )}
-
-      {/* Debug opcional o integración futura */}
-      {/* <pre>{JSON.stringify({ selected, range, country }, null, 2)}</pre> */}
     </div>
   );
 }

@@ -21,3 +21,20 @@ export async function getIndicatorHistory(
     }))
     .reverse();
 }
+
+export async function getIndicatorHistoryForCountries(
+  indicatorCode: string,
+  countryCodes: string[],
+  years = 10
+): Promise<Map<string, Entry[]>> {
+  const results = new Map<string, Entry[]>();
+
+  await Promise.all(
+    countryCodes.map(async (code) => {
+      const history = await getIndicatorHistory(indicatorCode, code, years);
+      results.set(code, history);
+    })
+  );
+
+  return results;
+}

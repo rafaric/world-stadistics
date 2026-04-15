@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { categories } from "../constants/constants";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navItems = [
   { label: "Inicio", href: "/" },
@@ -47,9 +48,12 @@ const Navigator = () => {
           })}
         </ul>
 
-        {/* Mobile menu button */}
-        <button
-          className="lg:hidden p-2 rounded-md hover:bg-secondary transition-colors"
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+
+          {/* Mobile menu button */}
+          <button
+            className="lg:hidden p-2 rounded-md hover:bg-secondary transition-colors"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={menuOpen}
@@ -77,7 +81,8 @@ const Navigator = () => {
               </>
             )}
           </svg>
-        </button>
+          </button>
+        </div>
       </nav>
 
       {/* Mobile menu */}

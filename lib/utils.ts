@@ -9,17 +9,40 @@ export function getCountryNameByCode(code: string): string | undefined {
   const country = countries.find((c) => c.code === code);
   return country?.name;
 }
-export const formatValue = (value: number | null, unit: string) => {
-  if (value === null) return null;
+export const formatValue = (value: number | null, unit: string): string => {
+  if (value === null) return "Sin datos";
 
-  if (unit === "USD") {
-    const millones = value / 1_000_000;
-    return `${millones.toLocaleString(undefined, {
-      maximumFractionDigits: 0,
-    })} M ${unit}`;
+  const formatter = new Intl.NumberFormat("es-AR");
+
+  // Large USD values → compact
+  if (unit === "USD" && Math.abs(value) >= 1_000_000_000) {
+    const billones = value / 1_000_000_000;
+    return `$${billones.toLocaleString("es-AR", { maximumFractionDigits: 1 })} mil M ${unit}`;
   }
 
-  return `${value.toLocaleString()} ${unit}`;
+  if (unit === "USD" && Math.abs(value) >= 1_000_000) {
+    const millones = value / 1_000_000;
+    return `$${millones.toLocaleString("es-AR", { maximumFractionDigits: 0 })} M ${unit}`;
+  }
+
+  // Percentages → 1 decimal
+  if (unit === "%" || unit.includes("%")) {
+    return `${value.toLocaleString("es-AR", { maximumFractionDigits: 1 })}${unit.startsWith("%") ? "" : ` ${unit}`}`;
+  }
+
+  // Large numbers → compact
+  if (Math.abs(value) >= 1_000_000_000) {
+    const billones = value / 1_000_000_000;
+    return `${billones.toLocaleString("es-AR", { maximumFractionDigits: 2 })} mil M`;
+  }
+
+  if (Math.abs(value) >= 1_000_000) {
+    const millones = value / 1_000_000;
+    return `${millones.toLocaleString("es-AR", { maximumFractionDigits: 1 })} M`;
+  }
+
+  // Default → formatted with unit
+  return `${formatter.format(value)} ${unit}`.trim();
 };
 
 export function getIndicatorPropertyByCode(
